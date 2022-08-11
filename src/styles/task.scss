@@ -1,0 +1,14 @@
+.task-action {
+    cursor: pointer;
+}
+
+.task-body {
+    position: relative;
+    height: 400px;
+}
+.completed{
+    color:green;
+}
+.pending{
+    color:grey;
+}

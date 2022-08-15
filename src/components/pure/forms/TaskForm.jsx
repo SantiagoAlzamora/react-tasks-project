@@ -2,12 +2,20 @@ import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { LEVELS } from '../../../models/levels.enum'
 import { Task } from '../../../models/task.class'
+import { useState, useEffect } from 'react'
 
 function TaskForm({ add }) {
 
     const nameRef = useRef('')
     const descriptionRef = useRef('')
     const levelRef = useRef(LEVELS.NORMAL)
+    const [creating, setCreating] = useState(null)
+
+    useEffect(() => {
+        
+    
+    }, [creating])
+    
 
     function addTask(e) {
         e.preventDefault();
@@ -18,7 +26,14 @@ function TaskForm({ add }) {
             levelRef.current.value
 
         );
-        add(newTask)
+        setCreating("holas")
+        setTimeout(()=>{
+            setCreating(null)
+            add(newTask)
+            e.target.reset()
+        },1000)
+        
+        
     }
 
     return (
@@ -34,6 +49,7 @@ function TaskForm({ add }) {
                     
                 
                 <button type='submit' className='btn btn-success btn-lg m-2'>Add task</button>
+                {creating && (<span>Creando...</span>)}
             </div>
 
         </form>

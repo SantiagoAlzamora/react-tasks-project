@@ -1,15 +1,19 @@
 import './App.css';
-import TaskList from './components/container/TaskList';
-import Registerform from './components/pure/forms/Registerform';
-import TaskFormik from './components/pure/forms/TaskFormik';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LoginPage from './pages/auth/LoginPage'
+import RegisterPage from './pages/auth/RegisterPage'
+import TasksPage from './pages/tasks/TasksPage';
 
 function App() {
+
   return (
-    <div className="App">
-      {/* <TaskList /> */}
-      {/* <Registerform /> */}
-      <TaskFormik/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path='/' element={<LoginPage />} />
+        <Route exact path="/register" element={<RegisterPage/>}/>
+        <Route exact path='/dashboard' element={<TasksPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

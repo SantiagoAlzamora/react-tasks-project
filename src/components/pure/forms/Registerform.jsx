@@ -1,10 +1,10 @@
 import React from 'react'
 import { User } from '../../../models/user.class'
-import { Formik, Field, Form, ErrorMessage, yupToFormErrors } from "formik"
+import { Formik, Field, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { ROLES } from '../../../models/roles.enum'
 
-export default function Registerform() {
+export default function RegisterForm({onSubmit}) {
 
   const initialValues = {
     username: '',
@@ -42,12 +42,14 @@ export default function Registerform() {
       <Formik
         initialValues={initialValues}
         validationSchema={registerSchema}
-        onSubmit={async (values) => {
-          await new Promise((r) => setTimeout(r, 1000));
-          alert(JSON.stringify(values, null, 2))
+        onSubmit={(values, actions) => {
+          setTimeout(() => {
+            onSubmit(values);
+            actions.resetForm({});
+            actions.setSubmitting(false);
+          }, 500);
         }
-
-        }
+      }
       >
         {
           ({ values ,touched, errors, isSubmitting }) => (

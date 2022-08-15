@@ -4,7 +4,7 @@ import * as Yup from "yup"
 import { Task } from '../../../models/task.class'
 import { LEVELS } from '../../../models/levels.enum'
 
-export default function TaskFormik() {
+export default function TaskFormik({ add }) {
 
     const initialValues = {
         name: '',
@@ -29,9 +29,13 @@ export default function TaskFormik() {
             <Formik
                 initialValues={initialValues}
                 validationSchema={registerSchema}
-                onSubmit={async (values) => {
-                    await new Promise((r) => setTimeout(r, 1000));
-                    alert(JSON.stringify(values, null, 2))
+                onSubmit={(values, actions) => {
+                    setTimeout(() => {
+                        console.log(values)
+                        add(new Task(values.name,values.description,values.level,values.completed));
+                        actions.resetForm({});
+                        actions.setSubmitting(false);
+                    }, 500);
                 }
 
                 }

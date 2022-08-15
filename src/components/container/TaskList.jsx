@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { LEVELS } from '../../models/levels.enum';
 import { Task } from '../../models/task.class'
 import TaskForm from '../pure/forms/TaskForm';
+import TaskFormik from '../pure/forms/TaskFormik';
 import TaskComponent from '../pure/TaskComponent';
 
 import "../../styles/task.scss"
@@ -12,10 +13,11 @@ const defaultTask = new Task("Prueba", "hola estoy probando", false, LEVELS.NORM
 const defaultTask2 = new Task("Prueba2", "hola estoy probando 2", true, LEVELS.URGENT);
 const defaultTask3 = new Task("Prueba2", "hola estoy probando 2", false, LEVELS.BLOCKING);
 
-export default function TaskList() {
+export default function TaskList({user}) {
 
   const [tasks, setTasks] = useState([defaultTask, defaultTask2, defaultTask3])
   const [loading, setLoading] = useState(true)
+  const obejectUser = JSON.parse(user)
 
   useEffect(() => {
   }, [tasks])
@@ -79,7 +81,7 @@ export default function TaskList() {
       <div className='col-12'>
         <div className="card">
           <div className="card-header p-3">
-            <h3>Your tasks</h3>
+            <h3>Your tasks - {obejectUser.email}</h3>
           </div>
           <div className="card-body task-body" data-mdb-perfect-scrollbar='true'>
             {tasksList}

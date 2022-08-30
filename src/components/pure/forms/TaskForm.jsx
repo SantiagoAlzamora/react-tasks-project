@@ -2,33 +2,28 @@ import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { LEVELS } from '../../../models/levels.enum'
 import { Task } from '../../../models/task.class'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 function TaskForm({ add }) {
 
     const nameRef = useRef('')
     const descriptionRef = useRef('')
     const levelRef = useRef(LEVELS.NORMAL)
-    const [creating, setCreating] = useState(null)
-
-    useEffect(() => {
-        
-    
-    }, [creating])
+    const [creating, setCreating] = useState(false)
     
 
     function addTask(e) {
         e.preventDefault();
-        const newTask = new Task(
-            nameRef.current.value,
-            descriptionRef.current.value,
-            false,
-            levelRef.current.value
+        const newTask = {
+            name: nameRef.current.value,
+            description :descriptionRef.current.value,
+            completed: false,
+            level: levelRef.current.value
 
-        );
-        setCreating("holas")
+        };
+        setCreating(true)
         setTimeout(()=>{
-            setCreating(null)
+            setCreating(false)
             add(newTask)
             e.target.reset()
         },1000)
@@ -56,8 +51,8 @@ function TaskForm({ add }) {
     )
 }
 
-TaskForm.propTypes = {
-    add: PropTypes.func.isRequired
-}
+// TaskForm.propTypes = {
+//     add: PropTypes.func.isRequired
+// }
 
 export default TaskForm

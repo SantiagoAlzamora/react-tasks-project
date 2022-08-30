@@ -1,29 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RegisterForm from '../../components/pure/forms/RegisterForm';
+import { registerUser } from '../../services/userService';
+import '../../styles/login.scss'
+
+const INITIAL_STATE={
+    emailComplete:true,
+    emailExists:false,
+    passwordComplete:true,
+    passwordShort:false,
+}
 
 const RegisterPage = () => {
-    const [credentials, setCredentials] = useState(null);
     const navigate = useNavigate();
-    const user = localStorage.getItem('user') || null;
+    const [errorMessage, setErrorMessage] = useState(INITIAL_STATE)
 
-    useEffect(() => {
-        if (user) {
-            navigate('/dashboard');
+    async function register(values) {
+        localStorage.clear()
+        setErrorMessage(INITIAL_STATE)
+        try {
+            await registerUser(values)
+            navigate('/login')
+        } catch (error) {
+            setErrorMessage(error.response.data)
         }
-    });
-    useEffect(() => {
-        if (credentials) {
-            const c = JSON.stringify(credentials);
-            localStorage.setItem('user', c);
-            navigate('/dashboard');
-        }
-    });
+
+    }
+
+
     return (
-        <div>
+        <div className='text-center'>
             <h1>Register Page</h1>
-            <RegisterForm onSubmit={(e) => setCredentials(e)}/>
-            <Link to="/" > Login </Link>
+            <RegisterForm onSubmit={(e) => register(e)} errors={errorMessage} />
         </div>
     );
 }

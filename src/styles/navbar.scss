@@ -1,0 +1,31 @@
+.navbar{
+    display: flex;
+    width: 80vw;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar-left-section{
+    i{
+        font-size: 2rem;
+    }
+}
+
+.navbar-right-section{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    a{
+        text-decoration: none;
+        color:black;
+        transition: 300ms;
+        
+        &:hover{
+            color:blueviolet;
+            text-decoration: underline;
+            
+        }
+    }
+    
+}

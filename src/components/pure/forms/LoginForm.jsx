@@ -1,81 +1,32 @@
-import React from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useRef } from 'react';
 
+function LoginForm({ onSubmit,error }) {
 
-const loginSchema = Yup.object().shape(
-    {
-        email: Yup.string()
-            .email('Invalid email format')
-            .required('Email is required'),
-        password: Yup.string()
-            .required('Password is required')
+    const email = useRef()
+    const password = useRef()
+
+    function submitLogin(e) {
+        e.preventDefault()
+        onSubmit({
+            email:email.current.value,
+            password:password.current.value
+        })
     }
-);
-
-function LoginForm({onSubmit}) {
-
-    const initialCredentials = {
-        email: '',
-        password: ''
-    }
-
 
     return (
-        <div>
-            <h4>Login Formik</h4>
-            <Formik
-                // *** Initial values that the form will take
-                initialValues={initialCredentials}
-                // *** Yup Validation Schema ***
-                validationSchema={loginSchema}
-                // ** onSubmit Event
-                onSubmit={(values, actions) => {
-                    setTimeout(() => {
-                      onSubmit(values);
-                      actions.resetForm({});
-                      actions.setSubmitting(false);
-                    }, 500);
-                  }
-                }
-            >
-                {/* We obtain props from Formik */}
+        <form onSubmit={submitLogin} className='form-login'>
 
-                {({touched,
-                    errors,
-                    isSubmitting}) => (
-                    <Form>
-                        <label htmlFor="email">Email</label>
-                        <Field id="email" type="email" name="email" placeholder="example@email.com" />
+            <div>
+                <input type="email" className='form-control' ref={email} placeholder='example@example.com' />
+            </div>
 
-                        {/* Email Errors */}
-                        {
-                            errors.email && touched.email &&
-                            (
-                                <ErrorMessage name="email" component='div'></ErrorMessage>
-                            )
-                        }
+            <div>
+                <input type="password" placeholder='Password' ref={password} className='form-control'/>
+            </div>
+            {error && error}
+            <button type='submit' className='btn btn-primary'>Login</button>
 
-                        <label htmlFor="password">Password</label>
-                        <Field
-                            id="password"
-                            name="password"
-                            placeholder="password"
-                            type='password'
-                        />
-                        {/* Password Errors */}
-                        {
-                            errors.password && touched.password &&
-                            (
-                                <ErrorMessage name="password" component='div'></ErrorMessage>
-                            )
-                        }
-                        <button type="submit">Login</button>
-                        {isSubmitting ? (<p>Login your credentials...</p>) : null}
-                    </Form>
-                )}
-            </Formik>
-        </div>
+        </form>
     );
 }
 

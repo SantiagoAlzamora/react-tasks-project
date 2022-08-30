@@ -1,112 +1,53 @@
-import React from 'react'
-import { User } from '../../../models/user.class'
-import { Formik, Field, Form, ErrorMessage } from "formik"
-import * as Yup from "yup"
-import { ROLES } from '../../../models/roles.enum'
+import React, { useRef, useState } from 'react'
 
-export default function RegisterForm({onSubmit}) {
 
-  const initialValues = {
-    username: '',
-    email: '',
-    password: '',
-    confirm: '',
-    role: ROLES.USER
+export default function RegisterForm({ onSubmit, errors }) {
 
-  }
+  const email = useRef()
+  const password = useRef()
+  const password2 = useRef()
+  const [equalPasswords, setEqualPasswords] = useState(true)
 
-  const registerSchema = Yup.object().shape(
-    {
-      username: Yup.string()
-        .min(2, "Too short")
-        .max(12, "Too long")
-        .required("Required"),
-      email: Yup.string().email("Invalid email format").required("Required"),
-      role: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], "Select one").required("Required"),
-      password: Yup.string().min(8, "Too short").required("required"),
-      confirm: Yup.string().when("password", {
-        is: value => (value && value.length > 0 ? true : false),
-        then: Yup.string().oneOf([Yup.ref("password")], "The passwords must match")
-      }).required("Required")
+  console.log(errors);
 
+  function register(e) {
+    e.preventDefault()
+    if (validatePasswords(password.current.value,password2.current.value)) {
+      onSubmit({
+        email:email.current.value,
+        password:password.current.value
+      })
+
+    }else{
+      setEqualPasswords(false)
+      setTimeout(()=>{
+        setEqualPasswords(true)
+      },5000)
+      
     }
-  )
-
-  function submit(values) {
-    const user = new User();
   }
+  function validatePasswords(pw1, pw2) {
+    return pw1 === pw2
+  }
+
 
   return (
-    <div>
-      <h4>Registerform</h4>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={registerSchema}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            onSubmit(values);
-            actions.resetForm({});
-            actions.setSubmitting(false);
-          }, 500);
-        }
-      }
-      >
-        {
-          ({ values ,touched, errors, isSubmitting }) => (
-            <Form>
-              <label htmlFor="username">Username
-                <Field id="username" name="username" type="text" placeholder="Username..." />
-              </label>
-              {
-                errors.username && touched.username &&
-                (
-                  <ErrorMessage name='username' component='div' />
-                )
-              }
-              <label htmlFor="email">Email
-                <Field id="email" name="email" type="email" placeholder="Email..." />
-              </label>
-              {
-                errors.email && touched.email &&
-                (
-                  <ErrorMessage name='email' component='div' />
-                )
-              }
-
-              <Field component="select" id="role" name="role" >
-                <option value={ROLES.ADMIN}>Admin</option>
-                <option value={ROLES.USER}>User</option>
-              </Field>
-
-              <label htmlFor="password">Password
-                <Field id="password" name="password" type="password" placeholder="Password..." />
-              </label>
-              {
-                errors.password && touched.password &&
-                (
-                  <ErrorMessage name='password' component='div' />
-                )
-              }
-
-              <label htmlFor="confirm">Confirm password
-                <Field id="confirm" name="confirm" type="password" placeholder="Password..." />
-              </label>
-              {
-                errors.confirm && touched.confirm &&
-                (
-                  <ErrorMessage name='confirm' component='div' />
-                )
-              }
-
-              <button type='submit'>Sign Up</button>
-              {isSubmitting ? (<p>Creating the user</p>):null}
-
-
-            </Form>
-          )
-        }
-
-      </Formik>
-    </div>
+    <form onSubmit={register} className='form-login'>
+      <div>
+        <input type="email" className='form-control' ref={email} placeholder='example@example.com' />
+      </div>
+      {errors.emailComplete ===false && <span>El email no puede estar vacio</span>}
+      {errors.emailExists && <span>Este email ya existe</span>}
+      <div>
+        <input type="password" className='form-control' ref={password} placeholder='Password' />
+      </div>
+      {errors.passwordComplete === false && <span>La contraseña no puede estar vacia</span>}
+      {errors.passwordShort && <span>La contraseña debe contener 6 o mas caracteres</span>}
+      <div>
+        <input type="password" className='form-control' ref={password2} placeholder='Password' />
+      </div>
+      {!equalPasswords && <span>Las contraseñas no coinciden</span>}
+      <button type='submit' className='btn btn-primary'>Register</button>
+    </form>
   )
 }

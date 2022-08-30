@@ -19,7 +19,6 @@ export default function TaskFormik({ add }) {
                 .max(25, "Too long")
                 .required("Required"),
             description: Yup.string().required("Required"),
-            level: Yup.string().oneOf([LEVELS.NORMAL, LEVELS.URGENT, LEVELS.BLOCKING], "Select one").required("Required"),
         }
     )
 
@@ -31,8 +30,7 @@ export default function TaskFormik({ add }) {
                 validationSchema={registerSchema}
                 onSubmit={(values, actions) => {
                     setTimeout(() => {
-                        console.log(values)
-                        add(new Task(values.name,values.description,values.level,values.completed));
+                        add(values);
                         actions.resetForm({});
                         actions.setSubmitting(false);
                     }, 500);

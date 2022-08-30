@@ -5,22 +5,23 @@ import TaskList from '../../components/container/TaskList';
 
 const TasksPage = () => {
 
-    const navigate = useNavigate();
-    const user=localStorage.getItem('user');
+  // const navigate = useNavigate();
+  // const user=localStorage.getItem('user');
 
-    useEffect(() => {
-      if(!user){
-        navigate("/")
-      }
-    })
-    
+  // useEffect(() => {
+  //   if(!user){
+  //     navigate("/")
+  //   }
+  // })
 
-    return (
 
-        <div>
-            <TaskList user={user}></TaskList>
-        </div>
-    );
+  return (
+
+    <div>
+      <TaskList />
+      {/* <TaskList user={user}></TaskList> */}
+    </div>
+  );
 }
 
 export default TasksPage;
